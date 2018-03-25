@@ -198,6 +198,17 @@ class OpenSubSupport {
     }
   }
 
+  func requestByName(_ fileURL: URL, _ subs: [OpenSubSubtitle]) -> Promise<[OpenSubSubtitle]> {
+    guard subs.isEmpty else {
+      return Promise { fulfill, reject in fulfill(subs) }
+    }
+    return requestIMDB(fileURL).then { IMDB in
+      let info = ["imdbid": IMDB]
+      return self.request(info)
+    }
+  }
+
+
   func requestIMDB(_ fileURL: URL) -> Promise<String> {
     return Promise { fulfill, reject in
       let filename = fileURL.lastPathComponent
